@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}User Habits{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">User Habits</h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">
+                    {{ user_obj.get_full_name|default:user_obj.email }}
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <a href="/admin-panel/users/{{ user_obj.id }}/" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                    User Details
+                </a>
+                <a href="/admin-panel/" class="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition">
+                    Back to Admin
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">All Habits</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 dark:bg-gray-900/50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Habit</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Description</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Color</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Current Streak</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Longest Streak</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        {% for habit in habits %}
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-4 h-4 rounded-full inline-block" style="background-color: {{ habit.color|default:'#3B82F6' }};"></span>
+                                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ habit.name }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                {{ habit.description|default:"No description" }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                {{ habit.color|default:"#3B82F6" }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                                {{ habit.current_streak|default:"0" }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                                {{ habit.longest_streak|default:"0" }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                {{ habit.created_at|date:"M d, Y"|default:"—" }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">
+                                This user has no habits yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

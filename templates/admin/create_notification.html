@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Send Notification - Admin - Daily Discipline OS{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Send Notification</h1>
+        <p class="text-gray-500 dark:text-gray-400 mt-1">Send a notification to all users</p>
+    </div>
+    
+    <!-- Form Card -->
+    <div class="card p-8">
+        <form method="post" action="{% url 'admin_panel:create_notification' %}" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Title -->
+            <div>
+                <label for="id_title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Title</label>
+                {{ form.title }}
+            </div>
+            
+            <!-- Message -->
+            <div>
+                <label for="id_message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
+                {{ form.message }}
+            </div>
+            
+            <!-- Type -->
+            <div>
+                <label for="id_notification_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notification Type</label>
+                {{ form.notification_type }}
+            </div>
+            
+            <!-- Buttons -->
+            <div class="flex items-center space-x-4 pt-4">
+                <button type="submit" class="btn-primary flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    <span>Send to All Users</span>
+                </button>
+                <a href="{% url 'admin_panel:dashboard' %}" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add form classes to fields
+    document.querySelectorAll('input[type="text"]').forEach(field => {
+        field.classList.add('form-input');
+    });
+    document.querySelectorAll('textarea').forEach(field => {
+        field.classList.add('form-textarea');
+    });
+    document.querySelectorAll('select').forEach(field => {
+        field.classList.add('form-select');
+    });
+</script>
+{% endblock %}

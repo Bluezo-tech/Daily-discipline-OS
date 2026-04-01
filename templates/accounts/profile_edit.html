@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - Daily Discipline OS{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Edit Profile</h1>
+        <p class="text-gray-500 dark:text-gray-400 mt-1">Update your personal information</p>
+    </div>
+    
+    <!-- Form Card -->
+    <div class="card p-8">
+        <form method="post" action="{% url 'accounts:profile_edit' %}" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Avatar -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Profile Picture</label>
+                <div class="flex items-center space-x-4">
+                    {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="Current avatar" class="w-16 h-16 rounded-full object-cover">
+                    {% else %}
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold">
+                        {{ user.get_initials }}
+                    </div>
+                    {% endif %}
+                    <input type="file" name="avatar" accept="image/*" class="form-file">
+                </div>
+            </div>
+            
+            <!-- Name Fields -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="id_first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name</label>
+                    {{ form.first_name }}
+                </div>
+                <div>
+                    <label for="id_last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
+                    {{ form.last_name }}
+                </div>
+            </div>
+            
+            <!-- Email -->
+            <div>
+                <label for="id_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                {{ form.email }}
+            </div>
+            
+            <!-- Bio -->
+            <div>
+                <label for="id_bio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bio</label>
+                {{ form.bio }}
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Tell us a little about yourself</p>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="flex items-center space-x-4 pt-4">
+                <button type="submit" class="btn-primary">Save Changes</button>
+                <a href="{% url 'accounts:profile' %}" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add form-input class to form fields
+    document.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(field => {
+        field.classList.add('form-input');
+    });
+</script>
+{% endblock %}

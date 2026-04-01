@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}User Details{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">User Details</h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">Admin view for this user account</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="/admin-panel/" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                    Back to Admin
+                </a>
+                <a href="/admin-panel/users/{{ user_obj.id }}/tasks/" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
+                    View Tasks
+                </a>
+                <a href="/admin-panel/users/{{ user_obj.id }}/habits/" class="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition">
+                    View Habits
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-1">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold mb-4 overflow-hidden">
+                            {% if user_obj.avatar %}
+                                <img src="{{ user_obj.avatar.url }}" alt="Avatar" class="w-24 h-24 rounded-full object-cover">
+                            {% else %}
+                                {% if user_obj.first_name or user_obj.last_name %}
+                                    {{ user_obj.first_name|slice:":1"|upper }}{{ user_obj.last_name|slice:":1"|upper }}
+                                {% else %}
+                                    {{ user_obj.email|slice:":1"|upper }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            {% if user_obj.get_full_name %}
+                                {{ user_obj.get_full_name }}
+                            {% else %}
+                                {{ user_obj.email }}
+                            {% endif %}
+                        </h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ user_obj.email }}</p>
+
+                        <div class="mt-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+                                {% if user_obj.is_superuser %}
+                                    bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300
+                                {% elif user_obj.is_staff %}
+                                    bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300
+                                {% else %}
+                                    bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300
+                                {% endif %}">
+                                {% if user_obj.is_superuser %}
+                                    Superuser
+                                {% elif user_obj.is_staff %}
+                                    Staff
+                                {% else %}
+                                    User
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 space-y-4">
+                        <div>
+                            <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Joined</p>
+                            <p class="text-sm text-gray-900 dark:text-white mt-1">
+                                {{ user_obj.date_joined|date:"M d, Y" }}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Theme</p>
+                            <p class="text-sm text-gray-900 dark:text-white mt-1">
+                                {{ user_obj.theme|default:"Not set" }}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Bio</p>
+                            <p class="text-sm text-gray-900 dark:text-white mt-1">
+                                {{ user_obj.bio|default:"No bio added yet." }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Total Tasks</p>
+                        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mt-2">{{ total_tasks|default:"0" }}</h3>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Completed Tasks</p>
+                        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mt-2">{{ completed_tasks|default:"0" }}</h3>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Total Habits</p>
+                        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mt-2">{{ total_habits|default:"0" }}</h3>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Current / Longest Streak</p>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+                            {{ current_streak|default:"0" }} / {{ longest_streak|default:"0" }}
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="/admin-panel/users/{{ user_obj.id }}/tasks/" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
+                            Open User Tasks
+                        </a>
+                        <a href="/admin-panel/users/{{ user_obj.id }}/habits/" class="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition">
+                            Open User Habits
+                        </a>
+                        <a href="/admin/" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                            Open Django Admin
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Account Summary</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700">
+                            <p class="text-gray-500 dark:text-gray-400">Email Verified</p>
+                            <p class="font-medium text-gray-900 dark:text-white mt-1">
+                                {% if user_obj.email_verified %}Yes{% else %}No{% endif %}
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700">
+                            <p class="text-gray-500 dark:text-gray-400">Last Login</p>
+                            <p class="font-medium text-gray-900 dark:text-white mt-1">
+                                {% if user_obj.last_login %}
+                                    {{ user_obj.last_login|date:"M d, Y H:i" }}
+                                {% else %}
+                                    Never
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

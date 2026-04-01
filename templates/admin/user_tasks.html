@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}User Tasks{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">User Tasks</h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">
+                    {{ user_obj.get_full_name|default:user_obj.email }}
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <a href="/admin-panel/users/{{ user_obj.id }}/" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                    User Details
+                </a>
+                <a href="/admin-panel/" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
+                    Back to Admin
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">All Tasks</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 dark:bg-gray-900/50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Due Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Due Time</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Priority</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Reminder</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Completed</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                        {% for task in tasks %}
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <td class="px-6 py-4">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ task.title }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ task.notes|default:"No notes" }}</p>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                {{ task.due_date|date:"M d, Y"|default:"—" }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                {{ task.due_time|time:"H:i"|default:"—" }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex px-3 py-1 rounded-full text-xs font-medium
+                                    {% if task.priority == 'high' %}
+                                        bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300
+                                    {% elif task.priority == 'medium' %}
+                                        bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300
+                                    {% else %}
+                                        bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300
+                                    {% endif %}">
+                                    {{ task.priority|default:"low"|title }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                                {% if task.reminder_enabled %}Enabled{% else %}Off{% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                {% if task.completed %}
+                                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                                        Yes
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        No
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400">
+                                This user has no tasks yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Users - Admin - Daily Discipline OS{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Users</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Manage all registered users</p>
+        </div>
+        <a href="{% url 'admin_panel:dashboard' %}" class="btn-secondary flex items-center space-x-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Dashboard</span>
+        </a>
+    </div>
+    
+    <!-- Users Table -->
+    <div class="card overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-gray-700/50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Joined</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tasks</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Completed</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Habits</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    {% for user_data in users %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold mr-3">
+                                    {{ user_data.user.get_initials }}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ user_data.user.get_full_name|default:user_data.user.email }}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ user_data.user.email }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ user_data.user.created_at|date:"M d, Y" }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">{{ user_data.task_count }}</td>
+                        <td class="px-6 py-4 text-sm text-green-600 dark:text-green-400">{{ user_data.completed_tasks }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">{{ user_data.habit_count }}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center space-x-2">
+                                <a href="{% url 'admin_panel:user_detail' user_data.user.id %}" class="text-blue-600 dark:text-blue-400 hover:underline text-sm">View</a>
+                                <a href="{% url 'admin_panel:user_tasks' user_data.user.id %}" class="text-green-600 dark:text-green-400 hover:underline text-sm">Tasks</a>
+                                <a href="{% url 'admin_panel:user_habits' user_data.user.id %}" class="text-purple-600 dark:text-purple-400 hover:underline text-sm">Habits</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">No users found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

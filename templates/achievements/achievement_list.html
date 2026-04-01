@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Achievements - Daily Discipline OS{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Achievements</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Track your progress and earn badges</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <div class="text-right">
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ earned_count }}/{{ total_achievements }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Earned</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="card p-6">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Overall Progress</span>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{% widthratio earned_count total_achievements 100 %}%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-bar-fill bg-gradient-to-r from-blue-500 to-purple-600" style="width: {% widthratio earned_count total_achievements 100 %}"></div>
+        </div>
+    </div>
+    
+    <!-- Recently Earned -->
+    {% if earned_achievements %}
+    <div class="card p-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recently Earned</h2>
+        <div class="flex flex-wrap gap-3">
+            {% for user_achievement in earned_achievements|slice:":6" %}
+            <div class="achievement-badge" style="background-color: {{ user_achievement.achievement.color }}20; color: {{ user_achievement.achievement.color }};">
+                <span class="mr-2 text-lg">{{ user_achievement.achievement.icon }}</span>
+                <span>{{ user_achievement.achievement.name }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Achievement Categories -->
+    <div class="space-y-6">
+        {% for type_name, achievements in achievements_by_type.items %}
+        <div class="card overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ type_name }}</h2>
+            </div>
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for item in achievements %}
+                <div class="p-4 flex items-center justify-between {% if not item.earned %}opacity-50{% endif %}">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl" style="background-color: {{ item.achievement.color }}20;">
+                            {{ item.achievement.icon }}
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-900 dark:text-white">{{ item.achievement.name }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ item.achievement.description }}</p>
+                        </div>
+                    </div>
+                    {% if item.earned %}
+                    <div class="flex items-center text-green-600 dark:text-green-400">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-sm font-medium">Earned</span>
+                    </div>
+                    {% else %}
+                    <div class="text-gray-400 dark:text-gray-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
