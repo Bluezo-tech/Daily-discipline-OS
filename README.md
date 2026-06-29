@@ -1,6 +1,3 @@
-To fix your GitHub `README.md`, you need to copy the entire block of text below and paste it into that empty editor box you have open.
-
-**Copy this exactly:**
 
 ```markdown
 # Daily Discipline OS
