@@ -92,10 +92,4 @@ This project is for personal use.
 
 **Built by Bluezo Tech | Powered by Ugo-Codes**
 
-```
 
-**After you paste it:**
-1. Click the **Preview** tab at the top of your GitHub screen to make sure it looks spaced out correctly.
-2. If it looks good, click the green **Commit changes...** button at the top right to save it.
-
-```
